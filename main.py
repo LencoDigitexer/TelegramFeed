@@ -22,7 +22,7 @@ client = TelegramClient('session_feed', api_id, api_hash)
 sm = ScreenManager()
 login_screen = Screen(name="login")
 parse_screen = Screen(name="parse_chat")
-parse_screen.add_widget(Label(text="Начало парсинга, ожидайте"))
+parse_screen.add_widget(Label(text="Вы авторизованы. \nНачало парсинга, ожидайте"))
 
 
 
@@ -31,13 +31,14 @@ class TelegramFeedApp(App):
     def get_code(self, args):
         self.phone = self.phone_input.text
         print(self.phone)
-        client.connect()
+        
         client.send_code_request(self.phone)
         #client.sign_in(phone, input('Enter the code: '))
 
     def send_code(self, args):
         self.code = self.code_input.text
         client.sign_in(self.phone, self.code)
+        sm.current = "parse_chat"
 
     def change_screen(self, args):
         sm.current = "parse_chat"
@@ -60,7 +61,12 @@ class TelegramFeedApp(App):
         login_screen.add_widget(bl)
         sm.add_widget(login_screen)
         sm.add_widget(parse_screen)
-        sm.current = "login"
+
+        client.connect()
+        if not client.is_user_authorized():
+            sm.current = "login"
+        else:
+            sm.current = "parse_chat"
         return sm
 
 TelegramFeedApp().run()
