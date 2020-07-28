@@ -8,14 +8,15 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
-
+'''
 Config.set("graphics", "resizable", "0")
 Config.set("graphics", "width", "288")
 Config.set("graphics", "height", "512")
-
+'''
 
 #telegram import
 from telethon import TelegramClient, sync
+from telethon.tl.functions.messages import GetHistoryRequest
 api_id = 713781
 api_hash = '0c51c4c50d0587d53526c7ee082b3e65'
 client = TelegramClient('session_feed', api_id, api_hash)
@@ -24,11 +25,41 @@ client = TelegramClient('session_feed', api_id, api_hash)
 
 class parse_class(Screen):
     def on_enter(self):
-        
+        max = 10
+        i = 0
         for dialog in client.iter_dialogs():
-            print(dialog.title)
-            btn = Button(text=dialog.title, size_hint_y=None, height=40)
-            chats.add_widget(btn)
+            try:
+                i = i + 1
+                if i > max: break
+                
+                print(dialog.title)
+                
+
+                channel_username=dialog.title # your channel
+                channel_entity=client.get_entity(channel_username)
+                #print(channel_entity)
+                posts = client(GetHistoryRequest(
+                    peer=channel_entity,
+                    limit=100,
+                    offset_date=None,
+                    offset_id=0,
+                    max_id=0,
+                    min_id=0,
+                    add_offset=0,
+                    hash=0))
+
+                print(posts.messages[0].message)    
+
+                btn = Button(text=dialog.title, size_hint_y=None, height=40)
+                chats.add_widget(btn)
+
+                text = Label(text=posts.messages[0].message, size_hint_y=None, height=40)
+                chats.add_widget(text)
+        
+            except: pass
+
+
+            
 
         
         scroll_view.add_widget(chats)
