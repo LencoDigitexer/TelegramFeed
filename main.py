@@ -31,7 +31,7 @@ class parse_class(Screen):
             try:
                 i = i + 1
                 if i > max: break
-                
+
                 print(dialog.title)
                 
 
@@ -40,7 +40,7 @@ class parse_class(Screen):
                 #print(channel_entity)
                 posts = client(GetHistoryRequest(
                     peer=channel_entity,
-                    limit=100,
+                    limit=1,
                     offset_date=None,
                     offset_id=0,
                     max_id=0,
