@@ -29,8 +29,7 @@ class parse_class(Screen):
         i = 0
         for dialog in client.iter_dialogs():
             try:
-                i = i + 1
-                if i > max: break
+                
 
                 print(dialog.title)
                 
@@ -42,7 +41,7 @@ class parse_class(Screen):
                     peer=channel_entity,
                     limit=1,
                     offset_date=None,
-                    offset_id=0,
+                    offset_id=0, 
                     max_id=0,
                     min_id=0,
                     add_offset=0,
@@ -53,9 +52,12 @@ class parse_class(Screen):
                 btn = Button(text=dialog.title, size_hint_y=None, height=40)
                 chats.add_widget(btn)
 
-                text = Label(text=posts.messages[0].message, size_hint_y=None, height=40)
+                text = Label(text=posts.messages[0].message, size_hint_y=None, height=80)
                 chats.add_widget(text)
         
+                i = i + 1
+                if i > max: break
+                
             except: pass
 
 
